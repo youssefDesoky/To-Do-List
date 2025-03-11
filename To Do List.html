@@ -14,10 +14,14 @@
     </div>
     <div class="To-Do-Tasks"></div>
     <script>
+        
         let numOfTasks = localStorage.length;
         
         let task = document.getElementById('task');
         task.focus();
+        if (sessionStorage.length !== 0) {
+            task.value = sessionStorage.getItem('task');
+        }
 
         let addBtn = document.getElementById('addBtn');
         let toDoTasks = document.querySelector('.To-Do-Tasks');
@@ -44,8 +48,16 @@
 
         for (let i = 1; i <= localStorage.length; i++) createTask(localStorage.getItem(`task ${i}`));
 
+        addEventListener("beforeunload", function (event) {
+            if (task.value !== '') {
+                sessionStorage.clear();
+                sessionStorage.setItem('task', task.value);
+            }
+        });
+
         addBtn.onclick = () => {
             if (task.value !== '') {
+                sessionStorage.clear();
                 localStorage.setItem(`task ${++numOfTasks}`, task.value.trim());
                 createTask(task.value);
                 task.value = '';
@@ -54,6 +66,8 @@
 
         clearBtn.onclick = () => {
             localStorage.clear();
+            sessionStorage.clear();
+            task.value = '';
             toDoTasks.innerHTML = '';
             numOfTasks = localStorage.length;
         }
