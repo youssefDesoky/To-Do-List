@@ -6,45 +6,124 @@
     <title>To Do List</title>
 </head>
 <body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .task-making {
+            text-align: center;
+            padding: 0px 0px 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 15px 20px;
+        }
+
+        .title {
+            color: red;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .To-Do-Tasks {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 15px 20px;
+            border-radius: 10px;
+            min-height: 50px;
+        }
+
+        .task {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid black;
+            width: 275px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        .task-element {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            border: solid 3px black;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            background-color: white;
+        }
+
+        .taskName {
+            overflow: auto;
+            margin-right: 10px;
+        }
+
+        .addBtn,
+        .clearBtn,
+        .deleteTaskBtn {
+            color: white;
+            width: 100px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .addBtn,
+        .clearBtn {
+            margin-top: 20px;
+        }
+
+        .addBtn {
+            border: solid 3px green;
+            background-color: green;
+            transition: 0.5s;
+        }
+
+        .addBtn:hover {
+            background-color: white;
+            color: green;
+        }
+
+        .clearBtn,
+        .deleteTaskBtn {
+            border: solid 3px red;
+            background-color: red;
+            transition: 0.5s;
+        }
+
+        .clearBtn:hover,
+        .deleteTaskBtn:hover {
+            background-color: white;
+            color: red;
+        }
+    </style>
+
     <div class="task-making">
         <h1 class="title">Write What Do You Think About</h1>
-        <input type="text" id="task" placeholder="Write your task here">
-        <button id="addBtn">Add</button>
-        <button id="clearBtn">Clear</button>
+        <input type="text" class="task" placeholder="Write your task here">
+        <button class="addBtn">Add</button>
+        <button class="clearBtn">Clear</button>
     </div>
     <div class="To-Do-Tasks"></div>
     <script>
         
         let numOfTasks = localStorage.length;
-        
-        let task = document.getElementById('task');
+        let task = document.querySelector('.task');
+        let addBtn = document.querySelector('.addBtn');
+        let toDoTasks = document.querySelector('.To-Do-Tasks');
+        let clearBtn = document.querySelector('.clearBtn');
+
         task.focus();
         if (sessionStorage.length !== 0) {
             task.value = sessionStorage.getItem('task');
         }
-
-        let addBtn = document.getElementById('addBtn');
-        let toDoTasks = document.querySelector('.To-Do-Tasks');
-
-        // Styling
-        document.body.style.cssText = 'margin: 0; padding: 0; font-family: Arial, sans-serif;';
-
-        document.querySelector('.task-making').style.cssText = 'text-align: center; padding: 0px 0px 20px; background-color: #f0f0f0; border-radius: 10px; margin: 15px 20px;';
-
-        document.querySelector('.title').style.cssText = 'color: red; text-align: center; margin: 0; padding: 20px;';
-
-        toDoTasks.style.cssText = 'background-color: #f0f0f0; padding: 10px; margin: 15px 20px; border-radius: 10px; min-height: 50px;';
-
-        task.style.cssText = 'padding: 10px; border-radius: 10px; border: none; width: 300px; height: 30px; font-size: 20px;';
-
-        addBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px green; background-color: green; color: white; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer;';
-        addBtn.onmouseover = _ => addBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px green; background-color: white; color: green; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: 0.5s;';
-        addBtn.onmouseout = _ => addBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px green; background-color: green; color: white; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer;';
-
-        clearBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px red; background-color: red; color: white; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer;';
-        clearBtn.onmouseover = _ => clearBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px red; background-color: white; color: red; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: 0.5s;';
-        clearBtn.onmouseout = _ => clearBtn.style.cssText = 'padding: 10px; border-radius: 10px; border: solid 3px red; background-color: red; color: white; width: 80px; font-size: 20px; font-weight: bold; margin-top: 10px; cursor: pointer;';
-        // End of Styling
 
         for (let i = 1; i <= localStorage.length; i++) createTask(localStorage.getItem(`task ${i}`));
 
@@ -84,14 +163,7 @@
             let taskName = document.createElement('p');
             let taskDeleteBtn = document.createElement('button');
 
-            taskElement.style.cssText = 'background-color: white; margin: 20px 25px; padding: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;';
-            taskName.style.cssText = 'margin: 0; font-size: 20px;';
-
-            taskDeleteBtn.style.cssText = 'padding: 5px; border-radius: 5px; border: 2px solid red; background-color: red; color: white; font-size: 16px; font-weight: bold; cursor: pointer;';
-            taskDeleteBtn.onmouseover = _ => taskDeleteBtn.style.cssText = 'padding: 5px; border-radius: 5px; border: 2px solid red; background-color: white; color: red; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.5s;';
-            taskDeleteBtn.onmouseout = _ => taskDeleteBtn.style.cssText = 'padding: 5px; border-radius: 5px; border: 2px solid red; background-color: red; color: white; font-size: 16px; font-weight: bold; cursor: pointer;';
-
-            taskElement.classList.add('task');
+            taskElement.classList.add('task-element');
             taskName.classList.add('taskName');
             taskDeleteBtn.classList.add('deleteTaskBtn');
 
