@@ -125,7 +125,7 @@
             task.value = sessionStorage.getItem('task');
         }
 
-        for (let i = 1; i <= localStorage.length; i++) createTask(localStorage.getItem(`task ${i}`));
+        for (let i = 1; i <= localStorage.length; i++) createTask(localStorage.getItem(`task-${i}`));
 
         addEventListener("beforeunload", function (event) {
             if (task.value !== '') {
@@ -137,7 +137,7 @@
         addBtn.onclick = () => {
             if (task.value !== '') {
                 sessionStorage.clear();
-                localStorage.setItem(`task ${++numOfTasks}`, task.value.trim());
+                localStorage.setItem(`task-${++numOfTasks}`, task.value.trim());
                 createTask(task.value);
                 task.value = '';
             }
@@ -145,17 +145,16 @@
 
         clearBtn.onclick = () => {
             localStorage.clear();
+            numOfTasks = 0;
             sessionStorage.clear();
             task.value = '';
             toDoTasks.innerHTML = '';
-            numOfTasks = localStorage.length;
         }
 
-        function deleteTask (taskElement) {
-            localStorage.removeItem(taskElement);
-            toDoTasks.innerHTML = '';
-            for (let i = 1; i <= localStorage.length; i++) createTask(localStorage.getItem(`task ${i}`));
-            numOfTasks--;
+        function deleteTaskBtn(element) {
+            localStorage.removeItem(element.classList[1]);
+            if (localStorage.length === 0) numOfTasks = 0;
+            element.remove();
         }
 
         function createTask (taskVal) {
@@ -163,14 +162,15 @@
             let taskName = document.createElement('p');
             let taskDeleteBtn = document.createElement('button');
 
-            taskElement.classList.add('task-element');
+            taskElement.classList.add(`task-element`, `task-${numOfTasks}`);
             taskName.classList.add('taskName');
             taskDeleteBtn.classList.add('deleteTaskBtn');
 
             taskDeleteBtn.append('Delete');
             taskName.append(taskVal);
             taskElement.append(taskName, taskDeleteBtn);
-            taskDeleteBtn.onclick = () => deleteTask(`task ${numOfTasks}`);
+
+            taskDeleteBtn.addEventListener('click', _ => deleteTaskBtn(taskElement));
 
             toDoTasks.prepend(taskElement);
         }
